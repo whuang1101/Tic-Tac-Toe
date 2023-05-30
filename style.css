@@ -1,0 +1,160 @@
+*{
+    margin: 0px;
+
+}
+@font-face {
+    font-family: MyCustomFont;
+    src: url(arcadeClassic.ttf);
+}
+*{
+    font-family: MyCustomFont, Arial, Helvetica, sans-serif;    
+}
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: auto;
+}
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.header{
+    position: relative;
+    display: block;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+    padding: .2em;
+    font-size: 3em;
+    flex: 2;
+}
+.footer {
+    display: flex;
+    justify-content: center;
+    background-color: lightgrey;
+    flex:1;
+    align-items: center;
+    font-size: 1.5em;
+}
+.player-selection-screen {
+    display: grid;
+    grid-template-columns: repeat(1fr, 2);
+    grid-template-rows: 1fr 1.3fr;
+    border:1px solid black;
+    font-size: 3.2em;
+    color: white;
+    justify-content: center;
+    column-gap: 2em;
+    padding: .5em;
+}
+.first-player-selection, .second-player-selection{
+    display: grid;
+    row-gap: .5em;
+    grid-template-rows: 1fr 1f 1fr;
+}
+.player-selection-screen button {
+    font-size: 1em;
+}
+.first-player-selection {
+    grid-column: 1/2;
+    grid-row: 1/2;
+}
+.second-player-selection {
+    grid-column: 2/3;
+    grid-row:  1/2;
+}
+.submit {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    grid-column: 1/3;
+    margin: 7rem;
+
+}
+.player-selection-screen, .game-window {
+    flex: 10;
+    background-image: url(space.gif);
+    background-size: cover;
+    background-position: center;  
+    animation-duration: 10s; 
+    animation-timing-function: steps(2);
+    opacity: 1;
+    transition: opacity 1s;
+}
+.game-window {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.tic-tac-toe-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3,1fr);
+    grid-template-areas: "one two three" "four five six" "seven eight nine";
+    width: 400px;
+    height: 400px;
+    min-width: 200px;
+    min-height: 200px;
+    max-height: 500px;
+    max-width: 500px;
+    background-color: gray;
+    animation: fadeIn 1s ease-in-out forwards;
+}
+.hide {
+    display: none !important;
+    opacity: 0;
+    transition: opacity 1s;
+}
+.tic-tac-toe-box div {
+    font-size: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.one, .two, .three, .four, .five, .six {
+    border-bottom: 1px solid black;
+}
+.one, .four, .seven, .two,.five, .eight {
+    border-right: 1px solid black;
+}
+.one {
+    grid-area: one;
+}
+.two {
+    grid-area: two;
+}
+.three {
+    grid-area: three;
+}
+.four {
+    grid-area: four;
+}
+.five {
+    grid-area: five;
+}
+.six {
+    grid-area: six;
+}
+.seven {
+    grid-area: seven;
+}
+.eight {
+    grid-area: eight;
+}
+.nine {
+    grid-area: nine;
+}
+
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
