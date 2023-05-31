@@ -74,7 +74,7 @@ body {
     margin: 7rem;
 
 }
-.player-selection-screen, .game-window {
+.player-selection-screen, .game-window ,.result-screen{
     flex: 10;
     background-image: url(space.gif);
     background-size: cover;
@@ -83,6 +83,32 @@ body {
     animation-timing-function: steps(2);
     opacity: 1;
     transition: opacity 1s;
+}
+.result-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .5em;
+    color:white;
+    font-size: 10em;
+}
+.result {
+    animation: fadeIn 2s ease-in-out backwards;
+
+}
+.result-screen button {
+    font-size: .3em;
+    animation: appear 2s ease-in-out backwards;
+    animation-delay: 1.5s;
+    border-radius: 10em;
+    padding: .3em;
+    background-color: green;
+    border: .1em solid green;
+}
+.result-screen button:hover {
+    font-size: .35em;
+    border: .05em solid lightgreen;
 }
 .game-window {
     display: flex;
@@ -94,6 +120,10 @@ body {
 .which-player{ 
     font-size: 5em;
     color: white;
+    animation: fadeIn 1s ease-in-out forwards;
+}
+.add-red {
+    color: red;
 }
 .tic-tac-toe-box {
     display: grid;
@@ -102,8 +132,8 @@ body {
     grid-template-areas: "one two three" "four five six" "seven eight nine";
     width: 400px;
     height: 400px;
-    min-width: 200px;
-    min-height: 200px;
+    min-width: 150px;
+    min-height: 150px;
     max-height: 500px;
     max-width: 500px;
     background-color: gray;
@@ -170,3 +200,14 @@ body {
       transform: scale(1);
     }
   }
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+}
