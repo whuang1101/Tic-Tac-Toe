@@ -92,6 +92,8 @@ body {
     gap: .5em;
     color:white;
     font-size: 10em;
+    transition-delay: 2s;
+    animation-delay: 2s;
 }
 .result {
     animation: fadeIn 2s ease-in-out backwards;

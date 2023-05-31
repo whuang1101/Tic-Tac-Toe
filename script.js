@@ -57,7 +57,12 @@ const board = (() => {
         return false;
         
     }
-    return {realBoard, checkWin, row, column};
+    const resetBoard = () => {
+        board.realBoard = [["-", "-", "-"],
+        ["-", "-", "-"],
+        ["-", "-", "-"]];
+    }
+    return {realBoard, checkWin, row, column, resetBoard};
 })();
 const Player = (chip) => {
     let score = 0;
@@ -68,7 +73,8 @@ const Player = (chip) => {
 }
 
 
-
+let gameBoard = board;
+let counter = 1;
 let submit = document.querySelector(".submit")
 submit.addEventListener("click", () => {
     let selection = document.querySelector(".player-selection-screen");
@@ -77,8 +83,11 @@ submit.addEventListener("click", () => {
     gameWindow.classList.remove("hide");
     playGame(gameBoard);
 })
-let gameBoard = board;
-let counter = 1;
+// Setting up reset button 
+let restart =document.querySelector(".restart");
+restart.addEventListener("click", () => {
+    resetGame(gameBoard);
+});
 function playGame(gameBoard){
     let player1 = Player("x");
     let player2 = Player("o");
@@ -86,51 +95,74 @@ function playGame(gameBoard){
     
 }
 
-function placeTics(gameBoard, player1, player2,counter){
+  function placeTics(gameBoard, player1, player2, counter) {
     let chip = "";
     let box = document.querySelector(".tic-tac-toe-box");
-    let playerDisplay = document.querySelector(".which-player")
-    box.addEventListener("click", (event) => {
-    let classes = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-    let classValue = event.target.classList.value;
-    let index = classes.indexOf(classValue);
-    
-    if (index > -1 && !gameBoard.checkWin()) {
-        let winner = " ";
-        let row = Math.floor(index / 3);
-        let column = index % 3;
-        if (gameBoard.realBoard[row][column] !== "x" && gameBoard.realBoard[row][column] !== "o") {
-            if (counter === 9){
+    let playerDisplay = document.querySelector(".which-player");
+  
+    function handleBoxClick(event) {
+        let classes = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+        let classValue = event.target.classList.value;
+        let index = classes.indexOf(classValue);
+        
+        if (index > -1 && !gameBoard.checkWin()) {
+            let winner = " ";
+            let row = Math.floor(index / 3);
+            let column = index % 3;
+            
+            if (gameBoard.realBoard[row][column] !== "x" && gameBoard.realBoard[row][column] !== "o") {
+                if (counter % 2 === 1) {
                 chip = player1;
-                playerDisplay.innerHTML = "Draw"
-            }
-            else if (counter%2 === 1){
-                chip = player1;
-                playerDisplay.innerHTML = "Player 2's Turn(O):"
-            }
-            else if (counter %2 === 0 ){
+                playerDisplay.innerHTML = "Player 2's Turn(O):";
+            } else if (counter % 2 === 0) {
                 chip = player2;
-                playerDisplay.innerHTML = "Player 1's Turn(X):"
+                playerDisplay.innerHTML = "Player 1's Turn(X):";
             }
             gameBoard.realBoard[row][column] = chip;
-        }
-        event.target.innerHTML = chip;
-        event.target.classList.add("animation");
-        if(gameBoard.checkWin()) {
-            if(chip === "x"){
-                winner = "Player 1 Wins!";
             }
-            else if(chip === "o"){
-                winner ="Player 2 Wins!";
-            }
-            let gameWindow = document.querySelector(".game-window");
-            let resultWindow = document.querySelector(".result-screen");
-            let result = document.querySelector(".result");
-            result.innerHTML = winner;
-            gameWindow.classList.add("hide");
-            resultWindow.classList.remove("hide");
+            
+            event.target.innerHTML = chip;
+            event.target.classList.add("animation");
+            checkWinner(gameBoard, chip);
         }
-    }
-    counter ++;
+        counter += 1;
+        console.log(counter);
+        if (gameBoard.checkWin()) {
+            box.removeEventListener("click", handleBoxClick);
+        }
+        }
+    
+        box.addEventListener("click", handleBoxClick);
+  }  
+function resetGame (gameBoard){
+    gameBoard.resetBoard();
+    let classes = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    classes.forEach((element) =>{
+        let remover = document.querySelector("." + element);
+        remover.innerHTML = "";
+        remover.classList.remove("animation");
     })
+    let playerSelection = document.querySelector(".player-selection-screen");
+    let resultScreen = document.querySelector(".result-screen");
+    playerSelection.classList.remove("hide");
+    resultScreen.classList.add("hide");
+    counter = 1;
+}
+function checkWinner (gameBoard,chip) {
+    if(gameBoard.checkWin()) {
+        if(chip === "x"){
+            winner = "Player 1 Wins!";
+        }
+        else if(chip === "o"){
+            winner ="Player 2 Wins!";
+        }
+        let gameWindow = document.querySelector(".game-window");
+        let resultWindow = document.querySelector(".result-screen");
+        let result = document.querySelector(".result");
+        result.innerHTML = winner;
+        gameWindow.classList.add("hide");
+        resultWindow.classList.remove("hide");
+        let playerDisplay = document.querySelector(".which-player");
+        playerDisplay.innerHTML =  "Player 1's Turn(X):";
+    }
 }
