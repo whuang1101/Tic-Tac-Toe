@@ -86,8 +86,14 @@ body {
 }
 .game-window {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1em;
+}
+.which-player{ 
+    font-size: 5em;
+    color: white;
 }
 .tic-tac-toe-box {
     display: grid;
@@ -116,6 +122,9 @@ body {
 }
 .animation {
     animation: fadeIn .7s ease-in-out backwards;
+}
+.draw-animation {
+    animation: fadeIn .5 ease-in-out backwards;
 }
 .one, .two, .three, .four, .five, .six {
     border-bottom: 1px solid black;
