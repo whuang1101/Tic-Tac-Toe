@@ -109,10 +109,13 @@ body {
     transition: opacity 1s;
 }
 .tic-tac-toe-box div {
-    font-size: 3em;
+    font-size: 7em;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.animation {
+    animation: fadeIn .7s ease-in-out backwards;
 }
 .one, .two, .three, .four, .five, .six {
     border-bottom: 1px solid black;
