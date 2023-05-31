@@ -41,38 +41,46 @@ body {
 }
 .player-selection-screen {
     display: grid;
-    grid-template-columns: repeat(1fr, 2);
+    grid-template-columns: 1fr .2fr 1fr;
     grid-template-rows: 1fr 1.3fr;
     border:1px solid black;
     font-size: 3.2em;
     color: white;
     justify-content: center;
     column-gap: 2em;
-    padding: .5em;
+    padding-right: 4em;
+    padding-left: 4em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    align-items: center;
 }
-.first-player-selection, .second-player-selection{
+.second-player-selection{
     display: grid;
     row-gap: .5em;
     grid-template-rows: 1fr 1f 1fr;
-}
-.player-selection-screen button {
-    font-size: 1em;
+    grid-column: 3/4;
 }
 .first-player-selection {
     grid-column: 1/2;
-    grid-row: 1/2;
+    align-self: right;
+    padding-left: 2.2em;
 }
-.second-player-selection {
+.versus {
     grid-column: 2/3;
-    grid-row:  1/2;
+}
+.player-selection-screen button {
+    font-size: 1em;
 }
 .submit {
     display: flex;
     justify-content: center;
     align-self: center;
-    grid-column: 1/3;
+    grid-column: 1/4;
     margin: 7rem;
 
+}
+.green {
+    background-color: rgb(55, 196, 55);
 }
 .player-selection-screen, .game-window ,.result-screen{
     flex: 10;
