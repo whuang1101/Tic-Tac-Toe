@@ -5,6 +5,7 @@ const board = (() => {
     ["-", "-", "-"]];
     let row = -1;
     let column = -1;
+    let winner = "none";
     const checkWin = () => {
         let chip1AcrossRight = 0;
         let chip2AcrossRight = 0;
@@ -38,7 +39,7 @@ const board = (() => {
                         chip2AcrossRight +=1;
                     }
                 }
-                if((i === 0 && j === 2) || (i === 2 && j === 0) || (i ===1 && j === 0)){
+                if((i === 0 && j === 2) || (i === 2 && j === 0) || (i ===1 && j === 1)){
                     if(board.realBoard[i][j] === "x"){
                         chip1AcrossLeft += 1;
                     }
@@ -48,12 +49,15 @@ const board = (() => {
                 }
             }
             if(chip1ColumnCounter === 3 || chip1RowCounter === 3 || chip1AcrossRight === 3 ||  chip1AcrossLeft === 3){
+                board.winner = "X";
                 return true;
             }
             else if (chip2ColumnCounter === 3 || chip2RowCounter === 3 || chip2AcrossRight== 3 ||  chip2AcrossLeft === 3){
+                board.winner = "O";
                 return true;
             }
         }
+        winner = "none";
         return false;
         
     }
@@ -71,10 +75,12 @@ const board = (() => {
                 }
             }
         }
-        if(a ===0){
+        if(a ===0 && !board.checkWin()){
+            board.winner = "draw"
             return true;
         }
         else{
+        winner = "none";
         return false;
         }
     }
@@ -94,7 +100,7 @@ const board = (() => {
             return false;
         }
     } 
-    return {realBoard, checkWin, row, column, resetBoard, checkForDraw, checkFullBoard};
+    return {realBoard, checkWin, row, column, resetBoard, checkForDraw, checkFullBoard, winner};
 })();
 const Player = (chip) => {
     let score = 0;
@@ -210,6 +216,9 @@ function resetGame (gameBoard){
     playerSelection.classList.remove("hide");
     resultScreen.classList.add("hide");
     counter = 1;
+    gameBoard.winner = "none"
+    let green = document.querySelector(".green");
+    green.classList.remove("green");
 }
 function checkWinner (gameBoard,chip,ai) {
     if(gameBoard.checkWin()) {
@@ -241,56 +250,113 @@ function checkWinner (gameBoard,chip,ai) {
         resultWindow.classList.remove("hide");
     }
 }
-function placeTicsAI (gameBoard, player1){
+function placeTicsAI(gameBoard, player1) {
     let box = document.querySelector(".tic-tac-toe-box");
     let playerDisplay = document.querySelector(".which-player");
-    
+  
     function handleBoxClick(event) {
-        let classes = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-        let classValue = event.target.classList.value;
-        let index = classes.indexOf(classValue);
-        let check = 1;
-        if (index > -1 && !gameBoard.checkWin()) {
-            let row = Math.floor(index / 3);
-            let column = index % 3;
-            playerDisplay.innerHTML = "Player 1's Turn(X):";
-            event.target.innerHTML = "x";
-            event.target.classList.add("animation");
-            gameBoard.realBoard[row][column] = "x";
-            checkWinner(gameBoard, player1,false);
-            if(!gameBoard.checkFullBoard() && !gameBoard.checkWin()){
-            while(true){
-                let randomNumber = Math.floor(Math.random() * 9);
-                let randomDiv = document.querySelector("." + classes[randomNumber]);
-                let newIndex = classes.indexOf(classes[randomNumber]);
-                let newRow = Math.floor(newIndex / 3);
-                let newColumn = newIndex % 3;
-                gameBoard.realBoard[newRow][newColumn] = "o";
-
-                if(randomDiv.innerHTML !== "x" && randomDiv.innerHTML !== "o"){
-                    setTimeout(function() {
-                        playerDisplay.innerHTML = "Player 1's Turn(X):";
-                        randomDiv.innerHTML = "o";
-                        randomDiv.classList.add("animation");
-                        checkWinner(gameBoard, "o", true);
-                    }, 2000);
-                    check = 2;
-                    console.log("yes");
-                    playerDisplay.innerHTML = "AI's Turn(O)";
-                    break;
+      let classes = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+      let classValue = event.target.classList.value;
+      let index = classes.indexOf(classValue);
+      let check = 1;
+      if (index > -1 && !gameBoard.checkWin()) {
+        let row = Math.floor(index / 3);
+        let column = index % 3;
+        playerDisplay.innerHTML = "Player 1's Turn(X):";
+        event.target.innerHTML = "x";
+        event.target.classList.add("animation");
+        gameBoard.realBoard[row][column] = "x";
+        checkWinner(gameBoard, player1, false);
+  
+        function bestMove(gameBoard) {
+          let bestScore = -Infinity;
+          let move;
+          for (let i = 0; i < gameBoard.realBoard.length; i++) {
+            for (let j = 0; j < gameBoard.realBoard[i].length; j++) {
+              if (gameBoard.realBoard[i][j] === "-") {
+                gameBoard.realBoard[i][j] = "o";
+                let score = minimax(gameBoard, 0, false);
+                gameBoard.realBoard[i][j] = "-";
+  
+                if (score > bestScore) {
+                  bestScore = score;
+                  move = { i, j };
                 }
+              }
             }
-            }
+          }
+          gameBoard.realBoard[move.i][move.j] = "o";
+          let places = [
+            ["one", "two", "three"],
+            ["four", "five", "six"],
+            ["seven", "eight", "nine"]
+          ];
+          let randomDiv = document.querySelector("." + places[move.i][move.j]);
+          box.removeEventListener("click", handleBoxClick);
+          setTimeout(function () {
+            playerDisplay.innerHTML = "Player 1's Turn(X):";
+            randomDiv.innerHTML = "o";
+            randomDiv.classList.add("animation");
+            checkWinner(gameBoard, "o", true);
+            box.addEventListener("click", handleBoxClick);
+          }, 2000);
+          playerDisplay.innerHTML = "AI's Turn(O)";
         }
-        if (gameBoard.checkWin()) {
-            box.removeEventListener("click", handleBoxClick);
+  
+        if (!gameBoard.checkWin()) {
+          bestMove(gameBoard);
         }
-        }
-    
-        box.addEventListener("click", handleBoxClick);
-
+      }
+      if (gameBoard.checkWin()) {
+        box.removeEventListener("click", handleBoxClick);
+      }
+    }
+  
+    box.addEventListener("click", handleBoxClick);
+  }
+  
+let scores = {
+    "O" : 1, 
+    "X" : -1,
+    "draw" : 0
 }
-
-function minimax(realBoard){
-    return 1;
-}
+function minimax(gameBoard, depth, maximizingPlayer) {
+    gameBoard.winner = "none";
+    gameBoard.checkWin();
+    gameBoard.checkForDraw();
+    let result = gameBoard.winner;
+  
+    if (result !== "none") {
+      let score = scores[result];
+      return score;
+    }
+  
+    if (maximizingPlayer) {
+      let bestScore = -Infinity;
+      for (let i = 0; i < gameBoard.realBoard.length; i++) {
+        for (let j = 0; j < gameBoard.realBoard[i].length; j++) {
+          if (gameBoard.realBoard[i][j] === "-") {
+            gameBoard.realBoard[i][j] = "o";
+            let score = minimax(gameBoard, depth + 1, false);
+            gameBoard.realBoard[i][j] = "-";
+            bestScore = Math.max(score, bestScore);
+          }
+        }
+      }
+      return bestScore;
+    } else {
+      let bestScore = Infinity;
+      for (let i = 0; i < gameBoard.realBoard.length; i++) {
+        for (let j = 0; j < gameBoard.realBoard[i].length; j++) {
+          if (gameBoard.realBoard[i][j] === "-") {
+            gameBoard.realBoard[i][j] = "x";
+            let score = minimax(gameBoard, depth + 1, true);
+            gameBoard.realBoard[i][j] = "-";
+            bestScore = Math.min(score, bestScore);
+          }
+        }
+      }
+      return bestScore;
+    }
+  }
+  
